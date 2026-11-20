@@ -1,88 +1,90 @@
+const scissoreffect = new Audio('scissor.wav')
+const papereffect = new Audio('paper.wav')
+const rockeffect = new Audio('rock.wav')
 
-function getComputerChoice(number) {
+papereffect.playbackRate = 2;   // 2x speed
+rockeffect.playbackRate=2;
+function getComputerChoice() {
     let random_number = Math.random();
     random_number = Math.floor(random_number * 3)
     // random_number = (random_number * 10) - random_number
     // 0 - 8 only 9 number is dividable by 3
 
-    if (random_number == 0) {
-        return "rock"
-    }
-
     if (random_number == 1) {
-        return "paper"
+        return 1
     }
 
     if (random_number == 2) {
-        return "scissor"
+        return 2
+    }
+
+    if (random_number == 0) {
+        return 0
     }
 }
 
-function getHumanChoice() {
-
-    let log = null;
-
-    log = prompt("Enter rock or paper or scissor");
-
-    log = log.toLowerCase();
+const humanScore = document.getElementById("Hscore");
+const computerScore = document.getElementById("Cscore");
+const StoreImages = document.querySelectorAll('.CCards>div')
 
 
-    if (log == "rock") {
-        return "rock"
+let HN = Number(humanScore.textContent);
+let CN = Number(computerScore.textContent);
+
+const humanChoice = document.querySelectorAll("button");
+
+
+let computerChoice = null;
+
+function playRound(event) {
+
+
+    computerChoice = getComputerChoice();
+    console.log(event.currentTarget.id)
+    if (event.currentTarget.id == "Rock" && computerChoice == 2) {
+        papereffect.play();
+        CN += 1;
     }
-    if (log == "paper") {
-        return "paper"
+    if (event.currentTarget.id == "Paper" && computerChoice == 1) {
+        papereffect.play();
+        HN += 1
     }
-    if (log == "scissor") {
-        return "scissor"
+    if (event.currentTarget.id == "Paper" && computerChoice == 0) {
+        scissoreffect.play();
+        CN += 1;
+
     }
+    if (event.currentTarget.id == "Scissor" && computerChoice == 2) {
+        scissoreffect.play();
+        HN += 1
+    }
+    if (event.currentTarget.id == "Scissor" && computerChoice == 1) {
+        rockeffect.play();
+        CN += 1;
+    }
+    if (event.currentTarget.id == "Rock" && computerChoice == 0) {
+        rockeffect.play();
+        HN += 1
+    }
+
+    StoreImages[computerChoice].classList.add('active')
+
+    humanScore.textContent = HN;
+    computerScore.textContent = CN;
+
+    setTimeout(() => {
+        StoreImages[computerChoice].classList.remove('active')
+    }, 800);
+
 }
 
 
+humanChoice.forEach((button) => {
+    button.addEventListener('click', playRound)
+    console.log(button)
+})
 
-function playGame() {
-
-    let humanScore = 0;
-    let computerScore = 0;
-
-    function playRound(humanChoice, computerChoice) {
-
-        console.log("Human: "+humanChoice);
-        console.log("Computer: "+computerChoice);
-
-        if (humanChoice == "rock" && computerChoice == "paper") {
-            console.log(`You lose! ${computerChoice} beats ${humanChoice}.`);
-            computerScore += 1;
-        }
-        if (humanChoice == "paper" && computerChoice == "rock") {
-            console.log(`You win! ${humanChoice} beats  ${computerChoice}.`);
-            humanScore += 1
-        }
-        if (humanChoice == "paper" && computerChoice == "scissor") {
-            console.log(`You lose! ${computerChoice} beats ${humanChoice}.`);
-            computerScore += 1;
-
-        }
-        if (humanChoice == "scissor" && computerChoice == "paper") {
-            console.log(`You win! ${humanChoice} beats ${computerChoice}.`);
-            humanScore += 1
-        }
-        if (humanChoice == "scissor" && computerChoice == "rock") {
-            console.log(`You lose! ${computerChoice} beats ${humanChoice}.`);
-            computerScore += 1;
-        }
-        if (humanChoice == "rock" && computerChoice == "scissor") {
-            console.log(`You win! ${humanChoice} beats ${computerChoice}.`);
-            humanScore += 1
-        }
-        console.log("Your Score: " + humanScore + "\nComputer Score: " + computerScore);
-    }
-
-    for (let i = 0; i < 5; i++) {
-        playRound(getHumanChoice(), getComputerChoice());
-    }
-
-}
-
-playGame();
+// for (let i = 0; i < 5; i++) {
+//     playRound(getHumanChoice(), getComputerChoice());
+//
 
